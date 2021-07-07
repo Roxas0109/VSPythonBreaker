@@ -25,27 +25,27 @@ def draw_window(blueBlock):
     blueBlock.draw(WIN)
     pygame.display.update()
 
-def create_bricks(allBricks):
+def create_bricks(brick_Group):
     for i in range(7):
         brick = Brick(BLUE_BLOCK_IMAGE, BLOCK_WIDTH, BLOCK_HEIGHT)
         brick.rect.x = 60 + i * 100
         brick.rect.y = 60
-        allBricks.add(brick)
+        brick_Group.add(brick)
     for i in range(7):
         brick = Brick(GREEN_BLOCK_IMAGE, BLOCK_WIDTH, BLOCK_HEIGHT)
         brick.rect.x = 60 + i * 100
         brick.rect.y = 100
-        allBricks.add(brick)
+        brick_Group.add(brick)
     for i in range(7):
         brick = Brick(RED_BLOCK_IMAGE, BLOCK_WIDTH, BLOCK_HEIGHT)
         brick.rect.x = 60 + i * 100
         brick.rect.y = 140
-        allBricks.add(brick)
+        brick_Group.add(brick)
 
 def main():
     #init blocks
-    allBricks = pygame.sprite.Group()
-    create_bricks(allBricks)
+    brick_Group = pygame.sprite.Group()
+    create_bricks(brick_Group)
 
     #set FPS
     clock = pygame.time.Clock()
@@ -57,7 +57,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-        draw_window(allBricks)
+        draw_window(brick_Group)
     pygame.quit()
 
 if __name__ == "__main__":
