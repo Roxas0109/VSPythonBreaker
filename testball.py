@@ -1,21 +1,29 @@
 import pygame
 import os
-class Brick(pygame.sprite.Sprite):
+class TestBall(pygame.sprite.Sprite):
 
     # Constructor. Pass in the color of the block,
     # and its x and y position
-    def __init__(self,image, width, height):
+    def __init__(self, color, width, height):
        # Call the parent class (Sprite) constructor
        pygame.sprite.Sprite.__init__(self)
 
        # Create an image of the block, and fill it with a color.
        # This could also be an image loaded from the disk.
        self.image = pygame.Surface([width, height])
-       self.image = pygame.transform.scale(image, (width, height))
+       self.image.fill(color)
 
        # Fetch the rectangle object that has the dimensions of the image
        # Update the position of this object by setting the values of rect.x and rect.y
        self.rect = self.image.get_rect()
 
-       #health
-       self.health = 2
+    def movement(self, keys_pressed, VEL):
+        #if specific keys are pressed, do action
+        if keys_pressed[pygame.K_a]: #LEFT
+            self.rect.x -= VEL
+        if keys_pressed[pygame.K_d]: #RIGHT
+            self.rect.x += VEL
+        if keys_pressed[pygame.K_w]: #UP
+            self.rect.y -= VEL
+        if keys_pressed[pygame.K_s]: #DOWN
+            self.rect.y += VEL
