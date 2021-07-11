@@ -20,8 +20,11 @@ FPS = 60
 BLOCK_WIDTH, BLOCK_HEIGHT = 80, 30
 
 BLUE_BLOCK_IMAGE = pygame.image.load(os.path.join('Assets', '01-Breakout-Tiles.png'))
+BLUE_BROKEN_IMAGE = pygame.image.load(os.path.join('Assets', '02-Breakout-Tiles.png'))
 GREEN_BLOCK_IMAGE = pygame.image.load(os.path.join('Assets', '15-Breakout-Tiles.png'))
+GREEN_BROKEN_IMAGE = pygame.image.load(os.path.join('Assets', '16-Breakout-Tiles.png'))
 RED_BLOCK_IMAGE = pygame.image.load(os.path.join('Assets', '07-Breakout-Tiles.png'))
+RED_BROKEN_IMAGE = pygame.image.load(os.path.join('Assets', '08-Breakout-Tiles.png'))
 
 def draw_window(brick_Group, test_ball_group):
     WIN.fill(BLACK)
@@ -31,17 +34,17 @@ def draw_window(brick_Group, test_ball_group):
 
 def create_bricks(brick_Group):
     for i in range(7):
-        brick = Brick(BLUE_BLOCK_IMAGE, BLOCK_WIDTH, BLOCK_HEIGHT)
+        brick = Brick(BLUE_BLOCK_IMAGE, BLUE_BROKEN_IMAGE, BLOCK_WIDTH, BLOCK_HEIGHT)
         brick.rect.x = 60 + i * 100
         brick.rect.y = 60
         brick_Group.add(brick)
     for i in range(7):
-        brick = Brick(GREEN_BLOCK_IMAGE, BLOCK_WIDTH, BLOCK_HEIGHT)
+        brick = Brick(GREEN_BLOCK_IMAGE, GREEN_BROKEN_IMAGE, BLOCK_WIDTH, BLOCK_HEIGHT)
         brick.rect.x = 60 + i * 100
         brick.rect.y = 100
         brick_Group.add(brick)
     for i in range(7):
-        brick = Brick(RED_BLOCK_IMAGE, BLOCK_WIDTH, BLOCK_HEIGHT)
+        brick = Brick(RED_BLOCK_IMAGE, RED_BROKEN_IMAGE, BLOCK_WIDTH, BLOCK_HEIGHT)
         brick.rect.x = 60 + i * 100
         brick.rect.y = 140
         brick_Group.add(brick)
@@ -74,10 +77,15 @@ def main():
         test_ball.movement(keys_pressed, 8)
 
         #if ball touches brick, break it
-        collisions = pygame.sprite.spritecollide(test_ball, brick_Group, True)
+        collisions = pygame.sprite.spritecollide(test_ball, brick_Group, False)
 
         for brick in collisions:
-            brick.kill()
+            if(brick.health == 0):
+                brick.kill()
+            else:
+                brick.health-=1
+                brick.checkHealth()
+                print(brick.health)
 
         draw_window(brick_Group, test_ball_group)
     pygame.quit()
