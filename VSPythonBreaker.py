@@ -2,15 +2,19 @@ import pygame
 import os
 from brick import Brick
 from testball import TestBall
+pygame.font.init()
 
 #app window size and flags
 WIDTH, HEIGHT = 800, 600
-WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Python Breaker')
 
 #color
 BLACK = (0,0,0)
 WHITE = (255,255, 255)
+
+#FONT 
+TEXT_FONT = pygame.font.SysFont('comicsans', 40)
 
 
 #LOCK FPS
@@ -27,9 +31,9 @@ RED_BLOCK_IMAGE = pygame.image.load(os.path.join('Assets', '07-Breakout-Tiles.pn
 RED_BROKEN_IMAGE = pygame.image.load(os.path.join('Assets', '08-Breakout-Tiles.png'))
 
 def draw_window(brick_Group, test_ball_group):
-    WIN.fill(BLACK)
-    brick_Group.draw(WIN)
-    test_ball_group.draw(WIN)
+    SCREEN.fill(BLACK)
+    brick_Group.draw(SCREEN)
+    test_ball_group.draw(SCREEN)
     pygame.display.update()
 
 def create_bricks(brick_Group):
@@ -48,6 +52,13 @@ def create_bricks(brick_Group):
         brick.rect.x = 60 + i * 100
         brick.rect.y = 140
         brick_Group.add(brick)
+
+def level_finished():
+    draw_text = TEXT_FONT.render("Finished!", 1, WHITE)
+    SCREEN.blit(draw_text, (WIDTH/2 - draw_text.get_width()/2, HEIGHT/2 - draw_text.get_height()/2))
+    pygame.display.update()
+    pygame.time.delay(5000)
+
 
 def main():
     #init blocks
@@ -71,6 +82,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                pygame.quit()
 
         #handle movement of test ball
         keys_pressed = pygame.key.get_pressed()
@@ -87,8 +99,14 @@ def main():
                 brick.checkHealth()
                 print(brick.health)
 
+        #check if all bricks are gone
+        if not brick_Group:
+            print("finished")
+            level_finished()
+            break
+
         draw_window(brick_Group, test_ball_group)
-    pygame.quit()
+    main()
 
 if __name__ == "__main__":
     main()
