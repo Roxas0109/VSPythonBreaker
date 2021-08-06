@@ -21,6 +21,7 @@ TEXT_FONT = pygame.font.SysFont('comicsans', 40)
 
 #LOCK FPS
 FPS = 30
+VELOCITY = 10
 
 #CREATE BLOCKS
 BLOCK_WIDTH, BLOCK_HEIGHT = 80, 30
@@ -42,6 +43,9 @@ PADDLE_IMAGES.append(pygame.image.load(os.path.join('Assets', '52-Breakout-Tiles
 
 #BALL
 BALL_DIAMETER = 16
+BALL_WIDTH, BALL_HEIGHT = 40, 40
+
+BALL_IMAGE = pygame.image.load(os.path.join('Assets', '58-Breakout-Tiles.png'))
 
 def draw_window(sprite_Group):
     SCREEN.fill(BLACK)
@@ -84,9 +88,16 @@ def main():
     paddle.rect.y = 500
     paddle_Group.add(paddle)
 
+    #init ball
+    ball_Group = pygame.sprite.GroupSingle()
+    ball = Ball(BALL_IMAGE, BALL_WIDTH, BALL_HEIGHT, VELOCITY)
+    ball.rect.x = 345
+    ball.rect.y = 195
+    ball_Group.add(ball)
+
     #group to hold all sprites
     sprite_Group = pygame.sprite.Group()
-    sprite_Group.add(brick_Group, paddle_Group)
+    sprite_Group.add(brick_Group, paddle_Group, ball_Group)
 
 
     #temp ball
@@ -110,21 +121,28 @@ def main():
                 run = False
                 pygame.quit()
 
-        #handle movement of test ball
+        #handle movement of ball and paddle
         keys_pressed = pygame.key.get_pressed()
-        #test_ball.movement(keys_pressed, 8)
-        paddle.movement(keys_pressed, 8, WIDTH)
+        paddle.movement(keys_pressed, VELOCITY, WIDTH)
+
+        ball.move_ball(WIDTH, HEIGHT)
 
         #if ball touches brick, break it
-        collisions = pygame.sprite.spritecollide(test_ball, brick_Group, False)
+        brick_collision = pygame.sprite.spritecollide(ball, brick_Group, False)
 
-        for brick in collisions:
+        for brick in brick_collision:
             if(brick.health == 0):
                 brick.kill()
+                ball.brick_bounce()
             else:
                 brick.health-=1
                 brick.checkHealth()
-                print(brick.health)
+                ball.brick_bounce()
+                #print(brick.health)
+        paddle_collision = pygame.sprite.spritecollide(ball, paddle_Group, False)
+
+        for paddle in paddle_collision:
+            ball.paddle_bounce()
 
         #check if all bricks are gone
         if not brick_Group:
