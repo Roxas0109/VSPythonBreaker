@@ -21,7 +21,13 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ball.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="brick.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="paddle.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="testball.py">
