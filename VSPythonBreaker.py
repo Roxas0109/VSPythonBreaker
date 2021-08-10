@@ -41,14 +41,15 @@ PADDLE_IMAGES.append(pygame.image.load(os.path.join('Assets', '51-Breakout-Tiles
 PADDLE_IMAGES.append(pygame.image.load(os.path.join('Assets', '52-Breakout-Tiles.png')))
 
 #BALL
-BALL_DIAMETER = 16
 BALL_WIDTH, BALL_HEIGHT = 40, 40
 
 BALL_IMAGE = pygame.image.load(os.path.join('Assets', '58-Breakout-Tiles.png'))
 
-def draw_window(sprite_Group):
+#draw objects on screen
+def draw_window(sprite_Group, GAME_TEXT):
     SCREEN.fill(BLACK)
     sprite_Group.draw(SCREEN)
+    SCREEN.blit(GAME_TEXT, (WIDTH - GAME_TEXT.get_width(), GAME_TEXT.get_height()))
     pygame.display.update()
 
 def create_bricks(brick_Group):
@@ -68,14 +69,31 @@ def create_bricks(brick_Group):
         brick.rect.y = 140
         brick_Group.add(brick)
 
+def display_timer(timer):
+    SCREEN.fill(BLACK)
+    draw_text = TEXT_FONT.render(str(timer), 1, WHITE)
+    SCREEN.blit(draw_text, (WIDTH/2 - draw_text.get_width()/2, HEIGHT/2 - draw_text.get_height()/2))
+    pygame.display.update()
+    pygame.time.delay(1000)
+
 def level_finished():
-    draw_text = TEXT_FONT.render("Finished!", 1, WHITE)
+    draw_text = TEXT_FONT.render("FINISHED", 1, WHITE)
     SCREEN.blit(draw_text, (WIDTH/2 - draw_text.get_width()/2, HEIGHT/2 - draw_text.get_height()/2))
     pygame.display.update()
     pygame.time.delay(5000)
 
+def game_over():
+    draw_text = TEXT_FONT.render("GAME OVER", 1, WHITE)
+    SCREEN.blit(draw_text, (WIDTH/2 - draw_text.get_width()/2, HEIGHT/2 - draw_text.get_height()/2))
+    pygame.display.update()
+    pygame.time.delay(5000)
 
 def main():
+    #init score and lives
+    score = 0
+    lives = 2
+    timer = 3
+
     #init blocks
     brick_Group = pygame.sprite.Group()
     create_bricks(brick_Group)
@@ -89,7 +107,7 @@ def main():
 
     #init ball
     ball_Group = pygame.sprite.GroupSingle()
-    ball = Ball(BALL_IMAGE, BALL_WIDTH, BALL_HEIGHT, VELOCITY)
+    ball = Ball(BALL_IMAGE, BALL_WIDTH, BALL_HEIGHT)
     ball.rect.x = 345
     ball.rect.y = 195
     ball_Group.add(ball)
@@ -100,6 +118,11 @@ def main():
 
     #set FPS
     clock = pygame.time.Clock()
+
+    #display timer before game starts
+    while timer > 0:
+        display_timer(timer)
+        timer -= 1
 
     #while true, run game
     run = True
@@ -116,15 +139,30 @@ def main():
 
         ball.move_ball(WIDTH, HEIGHT)
 
+        #check if ball hits the walls
+        if ball.rect.x + ball.rect.width >= WIDTH or ball.rect.x<=0:
+            ball.velocity[0] *= -1
+        
+        if ball.rect.y<=0:
+            ball.velocity[1] *= -1
+
+        if ball.rect.y + ball.rect.height >= HEIGHT:
+            lives -= 1
+            if lives < 0:
+                game_over()
+                break
+            ball.rect.x = 345
+            ball.rect.y = 195
+
         #if ball touches brick, break it
         brick_collision = pygame.sprite.spritecollide(ball, brick_Group, False)
 
         for brick in brick_collision:
-            brick.health-=1
-            brick.checkHealth()
+            brick.health -= 1
+            score = brick.checkHealth(score)
             ball.brick_bounce()
-            #print(brick.health)
 
+        #paddle collision
         paddle_collision = pygame.sprite.spritecollide(ball, paddle_Group, False)
 
         for paddle in paddle_collision:
@@ -132,12 +170,13 @@ def main():
 
         #check if all bricks are gone
         if not brick_Group:
-            print("finished")
             level_finished()
             break
 
+        #update window
+        GAME_TEXT = TEXT_FONT.render("Lives: "+ str(lives) +" Score: " + str(score), 1, WHITE)
         paddle.updateImage()
-        draw_window(sprite_Group)
+        draw_window(sprite_Group, GAME_TEXT)
     main()
 
 if __name__ == "__main__":

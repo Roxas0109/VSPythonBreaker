@@ -21,8 +21,10 @@ class Brick(pygame.sprite.Sprite):
        #health
        self.health = 2
 
-    def checkHealth(self):
+    def checkHealth(self, score):
         if self.health == 1:
             self.image = self.broken_img
+            return score
         elif self.health == 0:
             self.kill()
+            return score + 10
