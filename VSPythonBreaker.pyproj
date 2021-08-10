@@ -30,9 +30,6 @@
     <Compile Include="paddle.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="testball.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="VSPythonBreaker.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

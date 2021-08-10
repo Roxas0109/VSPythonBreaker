@@ -14,8 +14,7 @@ class Ball(pygame.sprite.Sprite):
        self.image = pygame.Surface([width, height])
        self.image = pygame.transform.scale(image, (width, height))
 
-       #self.velocity = [randint(4,8),randint(-8,8)]
-       self.velocity = [vel,randint(4,8)]
+       self.velocity = [vel,randint(3,8)]
 
        # Fetch the rectangle object that has the dimensions of the image
        # Update the position of this object by setting the values of rect.x and rect.y
@@ -34,13 +33,10 @@ class Ball(pygame.sprite.Sprite):
         if self.rect.y + self.rect.height >= screenHeight:
             self.rect.x = 345
             self.rect.y = 195
-            self.velocity = [self.velocity[0],randint(4,8)]
         
 
     def brick_bounce(self):
-        #self.velocity[0] = -self.velocity[0]
         self.velocity[1] = randint(1,8)
 
     def paddle_bounce(self):
-        #self.velocity[0] = -self.velocity[0]
         self.velocity[1] = randint(-8,-1)

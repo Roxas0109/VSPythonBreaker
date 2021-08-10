@@ -1,7 +1,6 @@
 import pygame
 import os
 from brick import Brick
-from testball import TestBall
 from paddle import Paddle
 from ball import Ball
 pygame.font.init()
@@ -98,16 +97,6 @@ def main():
     #group to hold all sprites
     sprite_Group = pygame.sprite.Group()
     sprite_Group.add(brick_Group, paddle_Group, ball_Group)
-
-
-    #temp ball
-    test_ball_group = pygame.sprite.GroupSingle()
-    test_ball = TestBall(WHITE, 30, 30)
-    test_ball.rect.x = 400
-    test_ball.rect.y = 500
-    test_ball_group.add(test_ball)
-
-    #sprite_Group.add(brick_Group, paddle_Group, test_ball_group)
 
     #set FPS
     clock = pygame.time.Clock()
