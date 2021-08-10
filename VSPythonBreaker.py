@@ -131,14 +131,11 @@ def main():
         brick_collision = pygame.sprite.spritecollide(ball, brick_Group, False)
 
         for brick in brick_collision:
-            if(brick.health == 0):
-                brick.kill()
-                ball.brick_bounce()
-            else:
-                brick.health-=1
-                brick.checkHealth()
-                ball.brick_bounce()
-                #print(brick.health)
+            brick.health-=1
+            brick.checkHealth()
+            ball.brick_bounce()
+            #print(brick.health)
+
         paddle_collision = pygame.sprite.spritecollide(ball, paddle_Group, False)
 
         for paddle in paddle_collision:

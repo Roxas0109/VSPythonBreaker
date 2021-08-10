@@ -24,3 +24,5 @@ class Brick(pygame.sprite.Sprite):
     def checkHealth(self):
         if self.health == 1:
             self.image = self.broken_img
+        elif self.health == 0:
+            self.kill()
