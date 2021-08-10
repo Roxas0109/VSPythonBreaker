@@ -46,9 +46,10 @@ BALL_WIDTH, BALL_HEIGHT = 40, 40
 BALL_IMAGE = pygame.image.load(os.path.join('Assets', '58-Breakout-Tiles.png'))
 
 #draw objects on screen
-def draw_window(sprite_Group, GAME_TEXT):
+def draw_window(sprite_Group, GAME_TEXT, EXIT_TEXT):
     SCREEN.fill(BLACK)
     sprite_Group.draw(SCREEN)
+    SCREEN.blit(EXIT_TEXT, (0, EXIT_TEXT.get_height()))
     SCREEN.blit(GAME_TEXT, (WIDTH - GAME_TEXT.get_width(), GAME_TEXT.get_height()))
     pygame.display.update()
 
@@ -137,6 +138,11 @@ def main():
         keys_pressed = pygame.key.get_pressed()
         paddle.movement(keys_pressed, VELOCITY, WIDTH)
 
+        #to quit game
+        if keys_pressed[pygame.K_x]:
+            run = False
+            pygame.quit()
+
         ball.move_ball(WIDTH, HEIGHT)
 
         #check if ball hits the walls
@@ -175,8 +181,9 @@ def main():
 
         #update window
         GAME_TEXT = TEXT_FONT.render("Lives: "+ str(lives) +" Score: " + str(score), 1, WHITE)
+        EXIT_TEXT = TEXT_FONT.render("Press 'x' to exit game", 1, WHITE)
         paddle.updateImage()
-        draw_window(sprite_Group, GAME_TEXT)
+        draw_window(sprite_Group, GAME_TEXT, EXIT_TEXT)
     main()
 
 if __name__ == "__main__":

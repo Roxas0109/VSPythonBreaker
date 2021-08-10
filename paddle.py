@@ -31,7 +31,7 @@ class Paddle(pygame.sprite.Sprite):
 
     def movement(self, keys_pressed, VEL, screen_Width):
         #if specific keys are pressed, do action
-        if keys_pressed[pygame.K_a] and self.rect.x > 0: #LEFT
+        if keys_pressed[pygame.K_LEFT] and self.rect.x > 0: #LEFT
             self.rect.x -= VEL
-        if keys_pressed[pygame.K_d] and self.rect.x + self.rect.width < screen_Width: #RIGHT
+        if keys_pressed[pygame.K_RIGHT] and self.rect.x + self.rect.width < screen_Width: #RIGHT
             self.rect.x += VEL
